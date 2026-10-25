@@ -18,26 +18,20 @@
 
 ## 📌 Overview
 
-Offline Unbound DNS resolver configuration hardening auditor
+
+OUnboundX is an offline, read-only Unbound DNS resolver configuration auditor that parses unbound.conf with include globs, stanza awareness and full continuation support. It evaluates access-control exposure, remote-control (unbound-control) security, DNSSEC and QNAME minimisation, cache-poisoning hardening and TLS/DoT settings. Findings are mapped to CWE and MITRE ATT&CK, scored and graded, and exported as TXT, Markdown, JSON, CSV or SARIF.
 
 ---
 
 ## ✨ Features
 
-- Stdlib unbound.conf parser — clauses, quoting, comments, include: / include-toplevel: with globs, unbound.conf.d
-- Open-resolver detection (interface × access-control)
-- Identity / version hiding, minimal-responses, deny-any
-- harden-* family, qname-minimisation, 0x20, aggressive-nsec
-- DNSSEC — validator module, trust anchors, permissive mode, domain-insecure, root-key-sentinel, val-clean-additional
-- DNS rebinding — private-address / private-domain coverage
-- ratelimit / ip-ratelimit / unwanted-reply-threshold
-- chroot / username / directory / pidfile / logfile
-- remote-control — interface, certificates, key permissions
-- forward-zone / stub-zone TLS upstream, tls-cert-bundle
-- DoT / DoH server keys, http-notls-downstream, ciphers
-- root-hints freshness, file ownership / permissions
-- Export TXT / Markdown / JSON / CSV / SARIF 2.1.0
-- Self-test --demo, CI gates --fail-on / --min-severity
+
+- Stdlib unbound.conf parser with include/include-toplevel globs, stanzas and continuations
+- Access-control audit: open resolver (0.0.0.0/0 allow), missing default deny, interface 0.0.0.0 exposure
+- remote-control checks: control-enable, control-interface bind, control-use-cert and key file perms
+- DNSSEC (auto-trust-anchor/trust-anchor, val-permissive), QNAME minimisation and 0x20 randomisation
+- Cache-poisoning hardening (harden-*), rrset/msg cache sizing, DoT upstreams and private-address leaks
+- CWE+ATT&CK mapping, offline --root trees, score/grade and TXT/MD/JSON/CSV/SARIF export
 
 ---
 
@@ -50,8 +44,13 @@ Offline Unbound DNS resolver configuration hardening auditor
 
 ## 🚀 Usage
 
+
 ```bash
-./OUnboundX
+./OUnboundX --scan -f sarif -o unbound.sarif
+./OUnboundX -c /etc/unbound/unbound.conf --min-severity medium
+./OUnboundX -r /mnt/image --fail-on high --json
+./OUnboundX --demo
+./OUnboundX --help
 ```
 
 ---
